@@ -1,4 +1,3 @@
-
 "use client";
 
 import Image from "next/image";
@@ -19,6 +18,8 @@ import {
 	SidebarInset,
 } from "@/components/ui/sidebar"
 import { Separator } from "@/components/ui/separator"
+import { AccountManager } from "@/components/AccountManager"
+// import { CreateAccountFAB } from "@/components/CreateAccountFAB"
 import { ReactNode } from "react";
 
 interface HeaderProps {
@@ -29,20 +30,11 @@ export function Header({ children }: HeaderProps) {
 	const pathname = usePathname();
 
 	const navigationItems = [
-		{
-			title: "Portfolio",
-			url: "/",
-			icon: { src: "/dollar.png", alt: "Portfolio", width: 24, height: 24 },
-		},
+		
 		{
 			title: "Tokens",
 			url: "/tokens",
 			icon: { src: "/Solana.png", alt: "Tokens", width: 24, height: 24 },
-		},
-		{
-			title: "Collectibles",
-			url: "/collectibles",
-			icon: { src: "/ethereum.webp", alt: "NFTs", width: 24, height: 24 },
 		},
 		{
 			title: "DeFi",
@@ -114,18 +106,7 @@ export function Header({ children }: HeaderProps) {
 						</SidebarContent>
 
 						<SidebarFooter className="p-6 border-t border-slate-200/60">
-							<div className="flex items-center gap-3 p-3 bg-slate-50 rounded-xl">
-								<div className="w-10 h-10 rounded-full bg-gradient-to-br from-emerald-400 to-blue-500 flex items-center justify-center text-white font-semibold shadow-md">
-									A1
-								</div>
-								<div className="flex-1">
-									<p className="text-sm font-semibold text-slate-700">Account 1</p>
-									<p className="text-xs text-slate-500">Solana Wallet</p>
-								</div>
-								<button className="p-2 hover:bg-slate-200 rounded-lg transition-colors">
-									<Image src="/copy.png" alt="Copy" width={16} height={16} />
-								</button>
-							</div>
+							<AccountManager />
 						</SidebarFooter>
 					</Sidebar>
 
@@ -138,6 +119,7 @@ export function Header({ children }: HeaderProps) {
 						<div className="flex-1 overflow-auto p-6">
 							{children}
 						</div>
+						{/* <CreateAccountFAB /> */}
 					</SidebarInset>
 			</SidebarProvider>
 		</div>

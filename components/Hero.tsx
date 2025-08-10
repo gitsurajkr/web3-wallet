@@ -3,20 +3,40 @@
 
 import Image from "next/image";
 import { useState } from "react";
+import { useAccount } from "@/contexts/AccountContext";
 
 export function Hero() {
+  const { activeAccount } = useAccount();
   const [copiedAddress, setCopiedAddress] = useState(false);
   
-  const walletAddress = "7xKXtg2CW87d97TXJSDpbD5jBkheTqA83TZRuJosgAsU";
-  
   const copyAddress = async () => {
+    if (!activeAccount) return;
+    
     try {
-      await navigator.clipboard.writeText(walletAddress);
+      await navigator.clipboard.writeText(activeAccount.address);
       setCopiedAddress(true);
       setTimeout(() => setCopiedAddress(false), 2000);
     } catch (err) {
       console.error("Failed to copy address:", err);
     }
+  };
+
+  if (!activeAccount) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <div className="text-center">
+          <h2 className="text-xl font-semibold text-slate-700 mb-2">No Active Account</h2>
+          <p className="text-slate-500">Please create or select an account to continue</p>
+        </div>
+      </div>
+    );
+  }
+
+  const blockchainIcons = {
+    ethereum: '/ethereum.webp',
+    solana: '/Solana.png',
+    polygon: '/ethereum.webp',
+    bsc: '/ethereum.webp',
   };
 
   return (
@@ -36,14 +56,20 @@ export function Hero() {
             <p className="text-blue-100 text-sm font-medium">Total Balance</p>
             <div className="flex items-center gap-2 mt-1">
               <Image src="/dollar.png" alt="USD" width={32} height={32} className="opacity-90" />
-              <span className="text-4xl font-bold">$5,234.56</span>
+              <span className="text-4xl font-bold">${activeAccount.balance.toLocaleString()}</span>
             </div>
           </div>
           <div className="text-right">
             <div className="w-16 h-16 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center mb-2">
-              <Image src="/Solana.png" alt="Solana" width={32} height={32} className="rounded-full" />
+              <Image 
+                src={blockchainIcons[activeAccount.blockchain]} 
+                alt={activeAccount.blockchain} 
+                width={32} 
+                height={32} 
+                className="rounded-full" 
+              />
             </div>
-            <p className="text-xs text-blue-100">Main Wallet</p>
+            <p className="text-xs text-blue-100">{activeAccount.name}</p>
           </div>
         </div>
         
@@ -57,7 +83,7 @@ export function Hero() {
             className="flex items-center gap-2 px-3 py-1.5 bg-white/20 backdrop-blur-sm rounded-lg hover:bg-white/30 transition-all duration-200"
           >
             <span className="text-sm font-mono text-blue-100">
-              {walletAddress.slice(0, 4)}...{walletAddress.slice(-4)}
+              {activeAccount.address.slice(0, 4)}...{activeAccount.address.slice(-4)}
             </span>
             {copiedAddress ? (
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
